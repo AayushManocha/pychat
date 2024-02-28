@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Request, Response
 import jwt
 from pydantic import BaseModel
 from app.database.db import USERS
+from app.controllers.utils.authentication_middleware import get_current_user
 
 
 auth_router = APIRouter()
@@ -30,6 +31,11 @@ async def login(login_request: LoginRequest, response: Response, status_code=200
     return {"message": "Login successful", "user": user}
   
   raise HTTPException(status_code=401, detail="Invalid username or password")
+
+@auth_router.get('/me')
+async def me(request: Request):
+  user = get_current_user(request)
+  return user
 
 
 @auth_router.post("/signup")
