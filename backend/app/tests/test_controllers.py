@@ -10,13 +10,13 @@ def test_login():
   assert response.status_code == 200
   assert response.cookies["_pychat"]
 
-def test_get_messages():
+def test_can_get_messages_by_chat_id():
   response = test_client.post("/login", json={"username": "john", "password": "password"})
-  response = test_client.get("/message")
+  response = test_client.get("/chat/1/message")
   assert response.status_code == 200
 
   response_json = response.json()
-  assert len(response_json) == 1
+  assert len(response_json) == 2
 
 def test_authenticated_user_create_message():
   response = test_client.post("/login", json={"username": "john", "password": "password"})
@@ -58,7 +58,7 @@ def test_a_user_can_view_their_chats():
   assert "user2_name" in response_json[0]
 
 
-def test_unautenticated_create_message():
+def test_unauthenticated_create_message():
   test_client.cookies["_pychat"] = "" # clear the cookie
   response = test_client.post("/message", json={"to_id": "1", "message": "hello"})
   assert response.status_code == 401

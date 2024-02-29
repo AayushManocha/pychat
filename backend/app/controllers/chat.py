@@ -10,13 +10,14 @@ chat_router = APIRouter()
 @chat_router.get("/chat")
 def chat_index(request: Request):
   user = get_current_user(request)
-  user_chats = [chat for chat in CHATS if chat['user1_id'] == user['id'] or chat['user2_id'] == user['id']]
+  chats_for_current_user = []
+  for chat in CHATS:
+    if chat['user1_id'] == user['id'] or chat['user2_id'] == user['id']:
+      chats_for_current_user.append(chat)
 
   # Add the user's name to the chat
-  for chat in user_chats:
-    if chat['user1_id'] == user['id']:
-      chat['user2_name'] = next(user['username'] for user in USERS if user['id'] == chat['user2_id'])
-    else:
-      chat['user1_name'] = next(user['username'] for user in USERS if user['id'] == chat['user1_id'])
+  for chat in chats_for_current_user:
+    chat['user1_name'] = USERS[int(chat['user1_id']) - 1]['username']
+    chat['user2_name'] = USERS[int(chat['user2_id']) - 1]['username']
 
-  return user_chats
+  return chats_for_current_user 

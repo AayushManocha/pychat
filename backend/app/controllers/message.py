@@ -47,9 +47,21 @@ async def create_message(request: Request, create_message_request: CreateMessage
   MESSAGES.append(new_message)
   return new_message
 
-@message_router.get("/message")
-async def get_messages(request: Request):
+@message_router.get("/chat/{chat_id}/message")
+async def get_messages(request: Request, chat_id: int):
   user = get_current_user(request)
-  MESSAGES_TO_USER = [m for m in MESSAGES if m['to_id'] == user['id']]
-  print(F'MESSAGES_TO_USER: {MESSAGES_TO_USER}')
-  return MESSAGES_TO_USER
+
+  chat = None
+  for c in CHATS:
+    if c['id'] == str(chat_id):
+      chat = c
+      break
+
+  user_in_chat = chat['user1_id'] == user['id'] or chat['user2_id'] == user['id']
+
+  if not user_in_chat:
+    raise HTTPException(status_code=404, detail="Chat not found")
+
+  messages_in_chat = [m for m in MESSAGES if m['chat_id'] == str(chat_id)]
+
+  return messages_in_chat
