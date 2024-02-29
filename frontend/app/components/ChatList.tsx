@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext } from "react";
@@ -24,9 +25,11 @@ export default function ChatList(props: ChatListProps) {
       {data.map((chat: any) => {
         const chatName: string = chat.user1_name == user?.username ? chat.user2_name : chat.user1_name
         return (
-          <article key={chat.id}>
-            <h2>{chatName.toLocaleUpperCase()}</h2>
-          </article>
+          <Link to={`/chats/${chat.id}`} key={chat.id}>
+            <article>
+              <h2>{chatName.toLocaleUpperCase()}</h2>
+            </article>
+          </Link>
         )
       })}
     </div>

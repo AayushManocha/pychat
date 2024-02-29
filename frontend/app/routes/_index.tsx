@@ -1,14 +1,8 @@
-import ChatList from "~/components/ChatList";
-import useAuthenticationGuard from "~/hooks/useAuthenticationGuard";
+import { useNavigate } from "@remix-run/react"
+import { useEffect } from "react"
 
-
-export default function Index() {
-  useAuthenticationGuard()
-
-  return (
-    <div style={{ height: '100%' }}>
-      <h1>Messages</h1>
-      <ChatList />
-    </div>
-  );
+export default function ChatIndex() {
+  const navigate = useNavigate()
+  useEffect(() => navigate('/chats'), [navigate])
+  return <></>
 }
