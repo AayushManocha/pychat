@@ -15,7 +15,7 @@ export default function ChatDetailPage() {
   const { user } = useContext(UserContext)
 
 
-  const { isLoading, isError, data: chatMessagesData } = useGetChatMessagesService(chatid)
+  const { isLoading, isError, data: chatMessagesData } = useGetChatMessagesService(chatid, 1000)
   const { isLoading: chatIsLoading, isError: chatIsError, data: chatData } = useGetChatByIdService(chatid)
 
   if (isLoading) return <div>Loading...</div>
