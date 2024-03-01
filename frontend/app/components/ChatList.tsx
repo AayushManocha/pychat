@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "~/root";
+import NewChatModal from "./NewChatModal";
 
 interface ChatListProps {
 }
@@ -32,6 +33,7 @@ export default function ChatList(props: ChatListProps) {
           </Link>
         )
       })}
+      <NewChatModal />
     </div>
   )
 

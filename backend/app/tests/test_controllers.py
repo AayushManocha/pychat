@@ -18,6 +18,15 @@ def test_login():
   assert response.status_code == 200
   assert response.cookies["_pychat"]
 
+def test_can_search_for_users_by_username():
+  response = test_client.post("/login", json={"username": "john", "password": "password"})
+  response = test_client.get("/user/search/jo")
+  assert response.status_code == 200
+
+  response_json = response.json()
+  assert len(response_json) == 1
+  assert response_json[0]["username"] == "john"
+
 def test_can_get_messages_by_chat_id():
   response = test_client.post("/login", json={"username": "john", "password": "password"})
   response = test_client.get("/chat/1/message")
