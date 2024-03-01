@@ -2,7 +2,12 @@ import { useContext, useMemo, useState } from "react"
 import useCreateMessageMutation from "~/hooks/useCreateMessageMutation"
 import { UserContext } from "~/root"
 
-export default function NewMessageForm({ chatData }: any) {
+interface NewMessageFormProps {
+  chatData?: any
+  toId?: number | null
+}
+
+export default function NewMessageForm({ chatData, toId }: NewMessageFormProps) {
 
   const [message, setMessage] = useState('')
   const { user } = useContext(UserContext)
@@ -10,6 +15,11 @@ export default function NewMessageForm({ chatData }: any) {
   const createMessageMutation = useCreateMessageMutation(chatid)
 
   const to_id = useMemo(() => {
+
+    if (toId) return toId
+
+    if (!chatData) return null
+
     const user1_id = chatData?.data?.user1_id
     const user2_id = chatData?.data?.user2_id
 
