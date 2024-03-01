@@ -5,7 +5,7 @@ import axios from "axios";
 import { set } from "node_modules/cypress/types/lodash";
 
 export default function NewChatModal() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [stage, setStage] = useState('search') // ['search', 'new-message']
   const [selectedUser, setSelectedUser] = useState<null | number>()
 
@@ -31,7 +31,7 @@ export default function NewChatModal() {
               <p onClick={handleClose}>Close</p>
             </header>
             {stage === 'search' && <UserSearchField handleUserSelect={handleUserSelect} />}
-            {stage === 'new-message' && <NewMessageForm toId={selectedUser} />}
+            {stage === 'new-message' && <NewMessageForm toId={selectedUser} onMessageSent={handleClose} />}
           </article>
         </dialog>
       )}

@@ -5,9 +5,10 @@ import { UserContext } from "~/root"
 interface NewMessageFormProps {
   chatData?: any
   toId?: number | null
+  onMessageSent?: () => void
 }
 
-export default function NewMessageForm({ chatData, toId }: NewMessageFormProps) {
+export default function NewMessageForm({ chatData, toId, onMessageSent }: NewMessageFormProps) {
 
   const [message, setMessage] = useState('')
   const { user } = useContext(UserContext)
@@ -31,6 +32,7 @@ export default function NewMessageForm({ chatData, toId }: NewMessageFormProps) 
     const to = to_id.toString()
     createMessageMutation({ message, to_id: to })
     setMessage('')
+    onMessageSent?.()
   }
   return (
     <form onSubmit={handleSubmitMessage}>
