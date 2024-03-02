@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
-from app.database.db import Chat, get_new_db_session, Message
+from sqlalchemy import select
+from app.database.db import Chat, User, get_new_db_session, Message
 from .utils.authentication_middleware import get_current_user
 
 
@@ -25,7 +26,7 @@ async def create_message(request: Request, create_message_request: CreateMessage
       s.add(chat)
       s.commit()
 
-    new_message = Message(message=create_message_request.message)
+    new_message = Message(message=create_message_request.message, sender_id=user['id'])
     chat.messages.append(new_message)
     s.commit()
     new_message = new_message.to_dict()
@@ -51,7 +52,8 @@ async def get_messages(request: Request, chat_id: int):
 
   messages = None
   with get_new_db_session() as s:
-    chat = s.query(Chat).filter(Chat.id == chat_id).first()
-    messages = chat.messages
+    # Get messages with a join on user to get the username as 'sender_name'
+    query = select(Message, User.username).join(User).where(Message.chat_id == chat_id)
+    messages = s.execute(query).all()
+    messages = [dict(m[0].to_dict(), sender_name=m[1]) for m in messages]
   return messages
-

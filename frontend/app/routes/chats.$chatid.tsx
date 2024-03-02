@@ -21,18 +21,35 @@ export default function ChatDetailPage() {
   if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error</div>
 
+  console.log('chatMessagesData', chatMessagesData)
+
   return (
     <div>
       <h1>Chat {chatid}</h1>
-      <ul>
+      <div>
         {chatMessagesData?.data.map((message: any) => {
           return (
-            <li key={message.id}>{message.message}</li>
+            <ChatMessage key={message.id} message={message} />
           )
         })}
-      </ul>
+      </div>
       <NewMessageForm chatData={chatData} />
     </div>
   )
 }
 
+
+function ChatMessage({ message }: { message: any }) {
+  return (
+    <div>
+      <article>
+        <header>
+          <i>
+            From: {message.sender_name}
+          </i>
+        </header>
+        <p>{message.message}</p>
+      </article>
+    </div>
+  )
+}
