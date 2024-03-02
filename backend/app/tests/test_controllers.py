@@ -34,6 +34,14 @@ def test_can_get_messages_by_chat_id():
 
   response_json = response.json()
 
+def messages_include_sender_name():
+  response = test_client.post("/login", json={"username": "john", "password": "password"})
+  response = test_client.get("/chat/1/message")
+  assert response.status_code == 200
+
+  response_json = response.json()
+  assert "sender_id" in response_json[0]
+
 def test_authenticated_user_create_message():
   response = test_client.post("/login", json={"username": "john", "password": "password"})
   response = test_client.post("/message", json={"to_id": "1", "message": "hello"})

@@ -5,8 +5,8 @@ USERS = [
 ]
 
 MESSAGES = [
-  {'id':'1', "chat_id": "1", "message": "Hello Mark"},
-  {'id':'2', "chat_id": "1", "message": "Hello John"},
+  {'id':'1', "chat_id": "1", "message": "Hello Mark", "sender_id": "1"},
+  {'id':'2', "chat_id": "1", "message": "Hello John", "sender_id": "2"},
 
   # {'id':'3', "chat_id": "2", "message": "Hello Luke"},
   # {'id':'4', "chat_id": "2", "message": "Hello John"},
@@ -59,6 +59,9 @@ class Message(Base):
   chat_id: Mapped[int] = mapped_column(ForeignKey("chats.id"), index=True)
   chat: Mapped["Chat"] = relationship("Chat", back_populates="messages")
 
+  sender_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+  sender: Mapped["User"] = relationship("User")
+
 class Chat(Base):
   __tablename__ = 'chats'
   id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
@@ -88,11 +91,14 @@ def seed_db():
   session.commit()
 
 def clear_db():
-  session = Session(ENGINE)
-  session.query(User).delete()
-  session.query(Chat).delete()
-  session.query(Message).delete()
-  session.commit()
+  try:
+    session = Session(ENGINE)
+    session.query(User).delete()
+    session.query(Chat).delete()
+    session.query(Message).delete()
+    session.commit()
+  except:
+    pass
 
 def create_db():
   Base.metadata.create_all(ENGINE)
